@@ -15,7 +15,7 @@ fullnameOverride: ""
 updateStrategy: "Recreate"
 
 # adminEmail -- Email of Admin Account
-adminEmail: ""
+adminEmail: "weblate@buildinglink.com"
 # adminUser -- Name of Admin Account
 adminUser: ""
 # adminPassword -- Password of Admin Account
@@ -24,26 +24,27 @@ adminPassword: ""
 # siteTile -- Site title
 siteTitle: "Weblate"
 # siteDomain -- Site domain
-siteDomain: "chart-example.local"
+siteDomain: "buildinglink.com"
 
 # emailHost -- Host for sending emails
-emailHost: ""
+emailHost: "buildinglink-com.mail.protection.outlook.com"
 # emailPort -- Port for sending emails
 emailPort: 587
 # emailTLS -- Use TLS when sending emails
 emailTLS: true
 # emailSSL -- Use SSL when sending emails
-emailSSL: true
+emailSSL: false
 # emailUser -- User name for sending emails
-emailUser: ""
+emailUser: "weblate@buildinglink.com"
 # emailPassword -- Password for sending emails
-emailPassword: ""
+emailPassword: "Vam79081"
 
 # serverEmail -- Sender for outgoing emails
 serverEmail: ""
 # defaultFromEmail -- From email for outgoing emails
 defaultFromEmail: ""
 # allowedHosts -- Hosts that are allowed to connect
+# WEBLATE_ALLOWED_HOSTS: weblate.example.com,weblate.buildinglink.com,localhost
 allowedHosts: "*"
 
 # debug -- Enable debugging
