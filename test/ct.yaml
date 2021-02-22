@@ -1,5 +1,5 @@
 remote: rancher-charts
-target-branch: master
+target-branch: v2.0.0
 chart-dirs:
   - charts
   - proposed
