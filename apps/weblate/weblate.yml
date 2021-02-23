@@ -1,0 +1,215 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "6"
+    field.cattle.io/publicEndpoints: "null"
+    meta.helm.sh/release-name: weblate
+    meta.helm.sh/release-namespace: weblate
+  creationTimestamp: "2021-02-23T15:31:37Z"
+  generation: 12
+  labels:
+    app.kubernetes.io/instance: weblate
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: weblate
+    app.kubernetes.io/version: 4.4.2
+    helm.sh/chart: weblate-0.3.0
+    io.cattle.field/appId: weblate
+  name: weblate
+  namespace: weblate
+  resourceVersion: "21541719"
+  selfLink: /apis/apps/v1/namespaces/weblate/deployments/weblate
+  uid: 2eaafab9-6f58-4439-8681-b453f3dcfbba
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: weblate
+      app.kubernetes.io/name: weblate
+      io.cattle.field/appId: weblate
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        cattle.io/timestamp: "2021-02-23T19:22:40Z"
+        checksum/config: 152468953f3c9fec7d6ea39b53a990edfb7c8737f4e250291f62d3b76d5a84da
+        checksum/secret: 43a28b9c60f73940c2fe1c7a88579c4641b490e7f4da5974f017f9b489c68f94
+        field.cattle.io/ports: '[[{"containerPort":8080,"dnsName":"weblate-hostport","hostPort":8080,"kind":"HostPort","name":"http","protocol":"TCP","sourcePort":8080}]]'
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/instance: weblate
+        app.kubernetes.io/name: weblate
+        io.cattle.field/appId: weblate
+    spec:
+      containers:
+      - env:
+        - name: POSTGRES_DATABASE
+          value: weblate
+        - name: POSTGRES_HOST
+          value: weblate-postgresql
+        - name: POSTGRES_PORT
+          value: "5432"
+        - name: REDIS_DB
+          value: "1"
+        - name: REDIS_HOST
+          value: weblate-redis-master
+        - name: WEBLATE_ADMIN_EMAIL
+          value: weblate@buildinglink.com
+        - name: WEBLATE_ALLOWED_HOSTS
+          value: '*'
+        - name: WEBLATE_DEBUG
+          value: "0"
+        - name: WEBLATE_DEFAULT_FROM_EMAIL
+          value: weblate@buildinglink.com
+        - name: WEBLATE_EMAIL_HOST
+          value: buildinglink-com.mail.protection.outlook.com
+        - name: WEBLATE_EMAIL_PORT
+          value: "587"
+        - name: WEBLATE_EMAIL_USE_SSL
+          value: "false"
+        - name: WEBLATE_EMAIL_USE_TLS
+          value: "true"
+        - name: WEBLATE_MT_MICROSOFT_TERMINOLOGY_ENABLED
+          value: "1"
+        - name: WEBLATE_SERVER_EMAIL
+          value: weblate@buildinglink.com
+        - name: WEBLATE_SITE_DOMAIN
+          value: weblate.buildinglink.com
+        - name: WEBLATE_SITE_TITLE
+          value: Weblate
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              key: postgresql-user
+              name: weblate
+              optional: false
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: postgresql-password
+              name: weblate
+              optional: false
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: redis-password
+              name: weblate
+              optional: false
+        - name: WEBLATE_ADMIN_NAME
+          valueFrom:
+            secretKeyRef:
+              key: admin-user
+              name: weblate
+              optional: false
+        - name: WEBLATE_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: admin-password
+              name: weblate
+              optional: false
+        - name: WEBLATE_EMAIL_USER
+          valueFrom:
+            secretKeyRef:
+              key: email-user
+              name: weblate
+              optional: false
+        - name: WEBLATE_EMAIL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: email-password
+              name: weblate
+              optional: false
+        - name: WEBLATE_MT_MICROSOFT_COGNITIVE_KEY
+          valueFrom:
+            secretKeyRef:
+              key: mt_microsoft_cognitive_key
+              name: weblate
+        - name: WEBLATE_GITHUB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: github-username
+              name: weblate
+        - name: WEBLATE_GITHUB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: github-token
+              name: weblate
+        image: weblate/weblate:4.4.2-1
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 10
+          httpGet:
+            path: /healthz/
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 90
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: weblate
+        ports:
+        - containerPort: 8080
+          hostPort: 8080
+          name: http
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /healthz/
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 90
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources: {}
+        securityContext:
+          capabilities: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /app/data/settings-override.py
+          name: weblate-config
+          subPath: settings-override.py
+        - mountPath: /app/data
+          name: weblate-data
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext:
+        fsGroup: 1000
+      serviceAccount: weblate
+      serviceAccountName: weblate
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          items:
+          - key: settings-override.py
+            path: settings-override.py
+          name: weblate
+        name: weblate-config
+      - name: weblate-data
+        persistentVolumeClaim:
+          claimName: weblate
+status:
+  conditions:
+  - lastTransitionTime: "2021-02-23T19:22:40Z"
+    lastUpdateTime: "2021-02-23T19:22:40Z"
+    message: Deployment does not have minimum availability.
+    reason: MinimumReplicasUnavailable
+    status: "False"
+    type: Available
+  - lastTransitionTime: "2021-02-23T15:31:37Z"
+    lastUpdateTime: "2021-02-23T19:23:12Z"
+    message: ReplicaSet "weblate-7bbbb85dd7" is progressing.
+    reason: ReplicaSetUpdated
+    status: "True"
+    type: Progressing
+  observedGeneration: 12
+  replicas: 1
+  unavailableReplicas: 1
+  updatedReplicas: 1
